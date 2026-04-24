@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "winedirect-docs": {
+      "type": "http",
+      "url": "https://docs.winedirectfulfillment.com/mcp"
+    }
+  }
+}
