@@ -3,6 +3,10 @@
     "winedirect-docs": {
       "type": "http",
       "url": "https://docs.winedirectfulfillment.com/mcp"
+    },
+    "atlassian": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "https://mcp.atlassian.com/v1/sse"]
     }
   }
 }
