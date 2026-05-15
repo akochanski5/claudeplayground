@@ -1,0 +1,34 @@
+---
+title: "v26.5.1 Release"
+description: "May 2026"
+---
+
+# v26.5.1 Release
+
+v26.5.1 Release - May 2026
+
+### New Features
+
+* **Notifications**: The **Estimated Delivery Date** merge tag is now fully active in shipment notification workflows. Notification templates that include the `EXPECTED_DELIVERY_DATE` merge field will now display the correct estimated arrival date for each shipment in customer emails and SMS messages. A bug causing this field to appear blank in Out-for-Delivery notifications has also been resolved. *(WD-1157, WD-1184, WD-1185)*
+
+* **Portal**: Added three new product configuration flags — **Lot Control**, **Serialized**, and **Marketplace SKU** — to the product create and edit pages in the Portal. Lot Control designates a SKU for lot-tracked inventory management; Serialized assigns a unique identifier to each individual unit; Marketplace SKU marks a product as available for third-party or marketplace selling programs. All three flags are also accessible via the REST API. *(WD-699, WD-714)*
+
+* **System**: Updated the product data transmission pipeline to include the Lot Control and Serialized flags when sending product information to the warehouse. The warehouse management system has been updated to accept and store these settings; both flags default to "No" unless explicitly enabled, and lot control may only be set at product creation. *(WD-700, WD-712)*
+
+* **System**: Added per-client configuration support for **UPS 3-Attempt Delivery** (NI1 carrier code). New settings at the order type level allow individual clients to opt into this program. When enabled, alcohol shipments automatically route through the NI1 UPS carrier code, triggering up to three delivery attempts before a package is returned to the warehouse. Active across all four WineDirect fulfillment centers. *(WD-1136, WD-1137)*
+
+---
+
+### Improvements to Existing Features
+
+* **C7**: Product descriptions in the Commerce7 integration are now managed separately for internal and external use. The internal description is used by warehouse staff during quality control and picking operations; the external description appears on packing slips and customer-facing documents. *(WD-571)*
+
+* **Portal**: Operations staff processing an inventory out-pick can now specify whether a quantity adjustment should be applied to both the fulfillment system and the warehouse system (physically missing inventory) or to the fulfillment system only (system-level discrepancy). New adjustment codes have been added to support storage subinventory types including standard storage (STS), bonded storage (BOND), and long-term storage (LTS). *(WD-489)*
+
+---
+
+### Bug Fixes
+
+* **Billing**: Resolved an issue where Operational Conditions Surcharge (OCS) values were not displaying in the Excel export of the Direct Shipping Invoice report. Column mapping has been corrected; OCS charges now appear correctly alongside the Temperature Control Linehaul Fee in the exported file. *(WD-1181)*
+
+* **WMS**: Fixed a bug where updating or re-syncing an existing product would incorrectly reset the case pack quantity to a default value of 12. The system now preserves the existing case quantity for products already registered in the WMS; the default is only assigned to newly created products. *(WD-634)*
