@@ -1,0 +1,114 @@
+---
+title: "v26.4.1 Release"
+description: "April 2026"
+---
+
+# v26.4.1 Release
+
+v26.4.1 Release - April 2026
+
+### New Features
+
+* **Billing**: Added a new "Operational Conditions Surcharge" billing service item. This carrier-imposed fee — reflecting fluctuating fuel costs and capacity conditions — now appears as a distinct line item on client invoices. *(WD-1094)*
+
+* **Billing**: Enabled automated invoicing for Temperature Control Linehaul Fees. These charges are now calculated and billed automatically, eliminating the need for manual tracking of temp-control delivery costs. *(WD-188)*
+
+* **Portal**: Added a new **Returning** shipment status. This status is applied when a shipment is in transit back to the warehouse (e.g., undeliverable or refused), giving operations teams and clients clearer visibility into the return lifecycle. *(WD-1133)*
+
+* **Portal**: Embedded a live system status widget on the Portal login page. When an active incident or scheduled maintenance is in progress, users will see an alert at login — keeping them informed without requiring a separate visit to the status page. *(WD-1130)*
+
+* **Portal**: Added storage-specific subinventories (BNDRITR and LTSRITR) as supported types in Inventory OUT requests and warehouse transfer workflows. Clients using bonded or long-term storage can now correctly initiate and complete inventory transfers involving these subinventory types. *(WD-475)*
+
+* **Notifications**: Added a new merge tag for **Estimated Delivery Date**. This tag can now be inserted into shipment notification email and SMS templates to dynamically display the expected delivery date for each individual shipment. *(WD-704)*
+
+* **Notifications**: Added a new merge tag for **Current Carrier Hold Location**. When a shipment is redirected to a UPS or FedEx Access Point or retail hold location, notification templates can now include the exact pickup address for the recipient. *(WD-728)*
+
+* **Reporting**: Established daily incremental data syncs feeding email and SMS notification usage metrics into the data warehouse (Snowflake via Fivetran/Azure). This enables ongoing reporting on notification program utilization across client accounts. *(WD-1165)*
+
+* **System**: Added a nightly automated job to purge event log records for closed orders older than 60 days. This routine maintenance reduces database size and improves query performance over time. *(WD-1134)*
+
+* **Portal**: Added a nightly automated process to retry orders previously blocked by state quantity or volume compliance limits. Once those limits reset, affected orders are automatically re-queued for processing overnight. *(WD-703)*
+
+---
+
+### Improvements to Existing Features
+
+* **Portal**: Added a new WMS Description field to the product edit screen in the Portal. This field allows a separate, warehouse-specific product description to be sent to the WMS for labeling and picking workflows, independent of the customer-facing product name. *(WD-1132, WD-1108)*
+
+* **WMS**: Updated the product upsert ESB to transmit Lot Control and Serialization flags from the fulfillment portal to the WMS. These flags form the foundation for bottle-level traceability for clients with premium or compliance tracking requirements. *(WD-713)*
+
+* **Portal**: Enhanced the Shipment Notification Report with timezone consistency (PST now displayed uniformly) and improved data layout and presentation. *(WD-1089)*
+
+* **Portal**: The order export file available from View Orders now includes full line-item detail per row — SKU, quantity ordered, quantity shipped, unit price, and status. This significantly enriches the data available for auditing and reconciliation. *(WD-396)*
+
+* **Notifications**: Updated the ESB merge fields pipeline to correctly deliver carrier hold location (HAL/AP) pickup addresses through email and SMS notification workflows. *(WD-1131)*
+
+* **Carriers**: The carrier upload for Arrive55 now includes the Estimated Ship Date in the data payload, enabling Arrive55 to better schedule pickups and plan delivery operations. *(WD-1088)*
+
+* **Portal**: The Salesforce Shipment object now stores the physical address of HAL/AP carrier hold locations, giving customer service teams direct visibility into where held shipments can be retrieved. *(WD-1123)*
+
+* **C7**: Added a per-tenant configuration toggle to exclude in-store point-of-sale (POS) orders from being sent to the fulfillment warehouse. *(WD-1099)*
+
+* **C7**: Added a new Orders and Inventory Synchronization Setting, giving clients granular control over how orders and inventory sync between Commerce7 and WineDirect Fulfillment. *(WD-1102)*
+
+* **C7**: Updated shipping fulfillment creation to set `sendTransactionEmail = true`, ensuring Commerce7 sends transaction confirmation emails to customers when a fulfillment record is created. *(WD-1077)*
+
+* **C7**: Product sync updates from Commerce7 are now restricted to matching product types, preventing mismatched product data from incorrectly overwriting existing portal records. *(WD-697)*
+
+* **C7**: Upgraded all NuGet package dependencies in the Commerce7 integration to current versions, improving security and long-term maintainability. *(WD-598)*
+
+* **Reporting**: Connected a Qlik analytics application to the Salesforce production environment, enabling live reporting and analytics from Salesforce data. *(WD-1142)*
+
+* **Portal**: Updated the WineDirect Fulfillment logo in the Portal to a high-resolution version, improving visual quality across high-density and large-format displays. *(WD-603)*
+
+* **WMS**: Migrated the packing station interface to updated infrastructure as part of ongoing warehouse tooling modernization. *(WD-723)*
+
+* **System**: Extended the automatic retry logic for inventory IN requests to also handle cases where SKUs are not yet registered in the WMS, reducing manual intervention for failed transmissions. *(WD-1081)*
+
+* **WMS**: Updated shipment processing to correctly handle shipment items that arrive in separate processing batches, improving reliability of the fulfillment pipeline. *(WD-1097)*
+
+* **System**: Refined the auto-close logic for inventory IN requests to more accurately determine when an IN request is fully complete. *(WD-1098)*
+
+* **System**: Resolved a threading issue (SemaphoreSlim) in the carrier validation service that could cause performance degradation during high-volume periods. *(WD-1116)*
+
+* **System**: Updated the cancel-outs query to only accept the correct reference number format, preventing incorrect record matches during cancellation processing. *(WD-1129)*
+
+* **Portal**: Resolved an issue that prevented client accounts from being deactivated in the Ops Portal when deleted or inactive users were still associated with the account. *(WD-1145)*
+
+* **System**: Migrated internal development build tooling to the `.slnx` format with `Directory.Build.props`, aligning with modern .NET build standards. *(WD-692)*
+
+---
+
+### Bug Fixes
+
+* **C7**: Resolved an error causing bundle/gift set (PTO/GSET) SKUs to fail during sync. The system now correctly matches bundle variant IDs between Commerce7 and the fulfillment portal. *(WD-1115)*
+
+* **C7**: Fixed a bug causing duplicate tracking numbers to appear on Commerce7 orders. A pre-flight duplicate check now prevents duplicate tracking records from being created. *(WD-1073)*
+
+* **C7**: Resolved an error occurring during scheduled inventory synchronization between Commerce7 and the fulfillment system. *(WD-1109)*
+
+* **C7**: Fixed an issue where custom sales attributes and tags applied to orders in Commerce7 were not being captured and synced — both at order creation and after order approval. *(WD-688, WD-1107)*
+
+* **C7**: Resolved an intermittent error occurring during inventory sync that had no clear error message. *(WD-1144)*
+
+* **C7**: Fixed non-wine SKUs missing from Commerce7 bundle products. All bundle components, including non-wine items, now sync correctly. *(WD-1143)*
+
+* **Portal**: Fixed a bug preventing customer service from filing damage claims for UPS and FedEx temperature-controlled shipments. Claims can now be submitted for temp-control orders, and the error messaging in the claims portal has been improved. *(WD-1100)*
+
+* **Carriers**: Deployed a hotfix adding ZIP codes 75071 and 75072 (McKinney/Frisco, TX — DFW region) to the Arrive55 delivery zone, correcting carrier routing for orders to these areas. Updated the COFE Shipvia map accordingly. *(WD-1127)*
+
+* **WMS**: Fixed an issue where the carrier code was not being retrieved from the WMS for shipment notifications, causing inaccurate carrier information to appear in customer-facing messages. *(WD-1085)*
+
+* **Notifications**: Fixed an issue where the customer order reference number was missing from certain outgoing notification emails. *(WD-1126)*
+
+* **Notifications**: Resolved a remaining gap in order number field mapping in email notifications. *(WD-1086)*
+
+* **Portal**: Corrected a one-day discrepancy in the shipped date displayed in the Shipments Report. The report now matches the shipped date shown in Order Detail. *(WD-1084)*
+
+* **WMS**: Fixed non-wine products failing to transmit to the WMS due to an unexpectedly required bottle size field. Non-wine SKUs now reach the warehouse correctly. *(WD-1095)*
+
+* **API**: Resolved a bug causing product lookup (`Get Product`) to fail for pack/bundle items that do not have an associated seller product. *(WD-1135)*
+
+* **WMS**: Resolved a sub-inventory move error affecting Constellation accounts. *(WD-1072)*
+
+* **System**: Further stabilized an intermittent crash in the carrier validation service related to App Insights application monitoring. *(WD-1128)*
